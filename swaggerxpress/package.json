@@ -1,0 +1,31 @@
+{
+  "name": "schema-(simple)",
+  "version": "1.0.0",
+  "description": "A sample API for Schemas as an example to demonstrate features in the swagger-2.0 specification",
+  "main": "index.js",
+  "scripts" : {
+    "start" : "node index.js",
+    "dev" : "nodemon index.js"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "async": "^2.0.0-rc.3",
+    "connect": "^3.2.0",
+    "debug": "^2.2.0",
+    "express": "^4.13.4",
+    "http-status": "^0.2.2",
+    "http-status-codes": "^1.0.6",
+    "js-yaml": "^3.6.0",
+    "json-refs": "^2.1.5",
+    "lodash": "^4.11.1",
+    "ls": "^0.1.0",
+    "mongoose": "^4.4.13",
+    "swagger-tools": "0.9.*",
+    "wagner-core": "^0.2.0",
+    "yaml-js": "^0.1.3"
+  }
+}

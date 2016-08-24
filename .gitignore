@@ -1,0 +1,9 @@
+lancelot/node_modules/
+lancelot/.vscode/
+swaggerxpress/node_modules/
+swaggerxpress/.vscode/
+run_swaggerxpress.bat
+run_lancelot.bat
+db
+.idea/*
+.DS_Store

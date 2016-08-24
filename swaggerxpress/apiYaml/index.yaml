@@ -1,0 +1,16 @@
+swagger: '2.0'
+info:
+  $ref: apiYaml/info/index.yaml
+host: "localhost:8080"
+basePath: "/v1/auth"
+schemes:
+- "https"
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  $ref: apiYaml/paths/index.yaml
+definitions:
+  $ref: apiYaml/definitions/index.yaml

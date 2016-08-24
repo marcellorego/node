@@ -1,0 +1,28 @@
+get:
+  tags:
+  - profile
+  summary: "Finds Profiles by code"
+  description: "Multiple code values can be provided with comma seperated strings"
+  operationId: "findByCode"
+  produces:
+  - application/json
+  - application/xml
+  parameters:
+  - in: query
+    name: codes
+    description: "Code values that need to be considered for filter"
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: multi
+  responses:
+    "200":
+      description: "successful operation"
+      schema:
+        type: array
+        items:
+          $ref: "#/definitions/profile"
+    "400":
+      description: "Invalid code value"
+  x-swagger-router-controller: "profile.controller"
