@@ -4,12 +4,37 @@ global.rootRequire = function(name) {
     return require(__dirname + '/' + name);
 }
 
+var cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    methodOverride = require('method-override'),
+    cookieSession = require('cookie-session'),
+    favicon = require('serve-favicon');
+
 var debug = require('debug')('mainApp');
-var app = require('express')();
 var swaggerTools = require('swagger-tools');
 var path = require("path");
 var _ = require('lodash');
 var fileUtils = require('./helpers/fileUtils');
+
+var app = require('express')();
+
+// =============================================================================
+// HTTP PARSERS
+// =============================================================================
+app.use(methodOverride('X-HTTP-Method-Override'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+// =============================================================================
+// CORS SUPPORT
+// =============================================================================
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
 
 // Load configurations from outside
 var isDevelopment = (process.env.NODE_ENV === 'development') ? true : false;
@@ -36,6 +61,9 @@ resolver
     .resolveRefs(apiDescriptor)
     .then(function(results) {
         results.resolved.host = serverIP;
+        if (serverPort) {
+            results.resolved.host += ':' + serverPort;
+        }
         initializeDatabaseConn(results.resolved);
     }, function (err) {
         debug(err.stack);

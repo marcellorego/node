@@ -1,7 +1,5 @@
-lancelot/node_modules/
-lancelot/.vscode/
-swaggerxpress/node_modules/
-swaggerxpress/.vscode/
+*/node_modules/
+*/.vscode/
 run_swaggerxpress.bat
 run_lancelot.bat
 db
