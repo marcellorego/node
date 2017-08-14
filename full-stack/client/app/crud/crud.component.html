@@ -1,0 +1,55 @@
+<p>
+  crud works!
+  {{api}}
+</p>
+
+<h3 class="first">Basic</h3>
+<div></div>
+<p-dataTable
+  #myCars
+  dataKey="id"  
+  selectionMode="single"
+  [value]="cars" sortMode="single" reorderableColumns="true"
+  [globalFilter]="gb" scrollable="true" scrollHeight="350px" [(selection)]="selectedItems" 
+  columnResizeMode="expand"
+  [paginator]="true" 
+  [pageLinks]="3"
+  [rows]="1"
+  [rowsPerPageOptions]="[1,5,10,20,50,100,9999]"
+  [responsive]="true"
+  (onPage)="onPageChange($event)"
+  (onRowUnselect)="onRowUnselect($event)"
+  (onRowSelect)="onRowSelect($event)">
+    <p-column field="model" header="Model" [sortable]="true"></p-column>
+    <p-column field="year" header="Year" [sortable]="true"></p-column>
+    <p-column field="brand" header="Brand" [sortable]="true" [filter]="true" filterPlaceholder="Search" filterMatchMode="contains"></p-column>
+    <p-column field="color" header="Color" [sortable]="true">
+      <ng-template let-data="rowData" pTemplate="body">
+        <div class="colordiv">
+          <div class="colorbox" [ngStyle]="{'background-color': '#' + data['color']}"></div>
+          <label [title]="'#' + data['color']">{{data['color']}}</label>
+        </div>
+      </ng-template>
+    </p-column>
+</p-dataTable>
+
+<h3>Dynamic Columns</h3>
+<p-dataTable [value]="cars">
+    <p-column *ngFor="let col of cols"
+                      [field]="col.field"
+                      [header]="col.header"
+                      [sortable]="col.sortable"
+                      [filter]="col.filter"
+                      [filterMatchMode]="col.filterMatchMode"
+                      (sortFunction)="customSortFunction($event)"
+                      [style]="col.style"
+                      >
+                <ng-template let-col let-data="rowData" pTemplate="body">
+                    <div>{{data[col.field]}}</div>
+                </ng-template>
+            </p-column>
+</p-dataTable>
+
+<p>
+{{selectedItems?.length}}
+</p>

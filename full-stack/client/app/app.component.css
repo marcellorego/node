@@ -1,0 +1,25 @@
+/* styles applied on :host are applied on the current component, "app" in this case */
+:host {
+  display: block;
+}
+
+/*header {
+  
+}
+
+main {
+  
+}*/
+
+footer {
+  background-color: #f8f8f8;
+  border-color: #e7e7e7;
+
+  a span {
+    color: #777;
+  }
+}
+
+footer.navbar {
+  min-height: 30px;
+}

@@ -1,0 +1,23 @@
+<p>
+  Contact Works!
+  {{title}}
+</p>
+
+<a [routerLink]="['/home']" [queryParams]="{debug: true}" queryParamsHandling="merge">
+  Link to home component
+</a>
+
+<div>
+
+  <input type="text" #txtInput>
+  <select>
+    <option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+    <option value="mercedes">Mercedes</option>
+    <option value="audi">Audi</option>
+  </select>
+
+  <button type="submit">Submit 2</button>
+
+</div>
+

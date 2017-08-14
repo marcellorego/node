@@ -1,0 +1,23 @@
+<p>
+  Home Works!
+</p>
+
+<div>
+    <p-dataTable #homeGrid 
+    dataKey="code"
+    selectionMode="multiple"
+    [value]="rowData" sortMode="single" reorderableColumns="true"
+    [globalFilter]="gb" scrollable="true" scrollHeight="350px" 
+    [(selection)]="selectedItems" 
+    columnResizeMode="expand"
+    [paginator]="true" 
+    [pageLinks]="3"
+    [rows]="10"
+    [rowsPerPageOptions]="[1,5,10,20,50,100,9999]"
+    [responsive]="true">
+        <p-column field="code" header="ID" [sortable]="true"></p-column>
+        <p-column field="name" header="Name" [sortable]="true"></p-column>
+        <p-column field="description" header="Description" [sortable]="true"></p-column>
+        <p-column field="type" header="Type" [sortable]="true"></p-column>
+    </p-dataTable>
+</div>
