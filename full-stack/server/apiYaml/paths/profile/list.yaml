@@ -1,0 +1,31 @@
+get:
+      tags:
+      - profile
+      description: "Returns all profile IDs from the system that the user can be assigned to"
+      operationId: "list"
+      produces:
+      - "application/json"
+      - "application/xml"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "maximum number of results to return"
+        required: false
+        type: "integer"
+        format: "int32"
+      responses:
+        200:
+          description: "profile response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/profile"
+        400:
+          description: "Malformed request."
+        403:
+          description: "Request could not be authorized."
+        default:
+          description: "unexpected error"
+          schema:
+            $ref: "#/definitions/errorModel"
+      x-swagger-router-controller: "profile.controller"

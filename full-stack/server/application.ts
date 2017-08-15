@@ -10,6 +10,7 @@ import { factory } from './logging';
 import { EventEmitter } from 'events';
 import { DBFactory, IDatabase } from './db/dbFactory';
 import DBError from './db/dbError';
+import YAMLResolver from './swagger/yamlResolver';
 
 // import { IndexRoute } from './routes/index';
 
@@ -21,6 +22,8 @@ const LOGGER = factory.getLogger('Application');
  * @class Application
  */
 export class Application extends EventEmitter {
+
+  private static instance: Application;
 
   public static TERMINATE = 'TERMINATE';
 
@@ -35,13 +38,16 @@ export class Application extends EventEmitter {
    * Bootstrap the application.
    *
    * @class Application
-   * @method bootstrap
+   * @method getInstance
    * @static
-   * @return Returns the newly created injector for this app.
+   * @return Returns the only one created instance for this app.
    */
-  public static bootstrap(name: string): Application {
-    LOGGER.info(`Booting ${name} ...`);
-    return new Application(name);
+  public static getInstance(name?: string): Application {
+    if (!Application.instance) {
+      LOGGER.info(`Booting ${name} ...`);
+      Application.instance = new Application(name);
+    }
+    return Application.instance;
   }
 
   /**
@@ -69,7 +75,7 @@ export class Application extends EventEmitter {
 
   private onDBConnected(): void {
     // add api
-    this.api();
+    this.apiDefinition();
 
     // add routes
     this.routes();
@@ -84,13 +90,25 @@ export class Application extends EventEmitter {
    * @class Server
    * @method api
    */
-  private api(): void {
-    const router: express.Router = express.Router();
+  private apiDefinition(): void {
+    // const router: express.Router = express.Router();
 
     // AuthRoute.create(router);
 
     // use router middleware
-    this.express.use('/api', router);
+    // this.express.use('/api', router);
+
+    const apiDescriptor: string = path.join(__dirname, process.env.API_DEFINITION);
+    const resolver: YAMLResolver = new YAMLResolver();
+    resolver.resolveRefs(apiDescriptor, {
+      host: `${this.express.locals.httpIP}:${this.express.locals.httpPort}`
+    })
+      .then((result: any) => {
+        console.log(result);
+        // initializeDatabaseConn(results.resolved);
+      }).catch((error) => {
+        this.emit(Application.TERMINATE, error);
+      });
   }
 
   /**
@@ -111,8 +129,8 @@ export class Application extends EventEmitter {
 
     // logging
     this.express.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
-      next();
       LOGGER.info(`Request ${req.method} ${req.path} ${res.statusCode}`);
+      next();
     });
 
     // mount morgan logger

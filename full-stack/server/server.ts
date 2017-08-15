@@ -14,7 +14,8 @@ const LOGGER = factory.getLogger('Server');
 export class Server {
 
   private sockets: Array<Socket> = [];
-  private httpPort: any;
+  private httpPort: number;
+  private httpIP: string;
   private httpServer: http.Server;
   private app: Application;
 
@@ -30,15 +31,26 @@ export class Server {
     LOGGER.info(`Initializing server for "${appName}"`);
 
     // create http server
-    this.httpPort = this.normalizePort(process.env.PORT || 3000);
+    this.httpPort = this.normalizePort(process.env.PORT);
+    this.httpIP = process.env.IP;
 
     // bootstrap application server
-    this.app = Application.bootstrap(appName);
-    this.app.on(Application.TERMINATE, (error) => this.onError(error));
+    this.app = Application.getInstance(appName);
+    this.app.on(Application.TERMINATE, (error) => {
+      error.terminate = true;
+      this.onError(error);
+    });
 
     const expressApp = this.app.express;
+    expressApp.locals.httpPort = this.httpPort;
+    expressApp.locals.httpIP = this.httpIP;
+
     expressApp.set('port', this.httpPort);
     expressApp.use((req, resp, next) => this.responseShuttingDown(req, resp, next));
+
+    if (process.env.ENV === 'dev') {
+      expressApp.use('/shutdown', () => this.cleanup('shutdown'));
+    }
 
     this.httpServer = http.createServer(expressApp);
 
@@ -62,12 +74,12 @@ export class Server {
   /**
    * Normalize a port into a number, string, or false.
    */
-  private normalizePort(val: any) {
+  private normalizePort(val: string): number {
     const port = parseInt(val, 10);
 
     if (isNaN(port)) {
       // named pipe
-      return val;
+      return 3000;
     }
 
     if (port >= 0) {
@@ -75,7 +87,7 @@ export class Server {
       return port;
     }
 
-    return false;
+    return 3000;
   }
 
   /**
@@ -83,7 +95,11 @@ export class Server {
    */
   private onError(error: any) {
 
-    if (error.syscall !== 'listen') {
+    if (error.terminate) {
+      LOGGER.error(error.code, error);
+      this.shuttDown(1);
+      return;
+    } else if (error.syscall !== 'listen') {
       LOGGER.error('error', error);
       throw error;
     }
@@ -100,10 +116,6 @@ export class Server {
         break;
       case 'EADDRINUSE':
         LOGGER.error(bind + ' is already in use');
-        this.shuttDown(1);
-        break;
-      case 'MongoError':
-        LOGGER.error(error.message);
         this.shuttDown(1);
         break;
       default:

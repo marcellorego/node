@@ -19,7 +19,7 @@ module.exports.list = function list(limit) {
         promisse.limit(limit);
     }
         
-    promisse.exec();
+    // promisse.exec();
         
     return promisse;
 };
@@ -30,9 +30,9 @@ module.exports.findByCode = function findByCode(codes) {
     
     var promisse = 
         ProfileModel
-        .find({ "code": { "$in" : codes} });
+        .find({ "_id": { "$in" : codes} });
         
-    promisse.exec();
+    // promisse.exec();
         
     return promisse;
 }

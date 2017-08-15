@@ -32,6 +32,6 @@ export default function setRoutes(app) {
   router.route('/user/:id').delete(userCtrl.delete);
 
   // Apply the routes to our application with the prefix /api
-  app.use('/v1/auth', router);
+  app.use('/api', router);
 
 }

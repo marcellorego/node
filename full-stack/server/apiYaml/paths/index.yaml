@@ -1,0 +1,4 @@
+/profile:
+    $ref: profile/list.yaml
+/profile/findByCode:
+    $ref: profile/findByCode.yaml

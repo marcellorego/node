@@ -11,7 +11,7 @@ export class ApiConfigService {
   }
 
   getApiURI() {
-    return `${this._serviceURI}/v1/auth/`;
+    return `${this._serviceURI}/api/`;
   }
 
   getApiHost() {
